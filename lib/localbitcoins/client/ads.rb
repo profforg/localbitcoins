@@ -19,9 +19,12 @@ module LocalBitcoins
     def update_ad(id, params={})
       old_ad = ad(id).data
       updated_params = {
-          :min_amount => old_ad.min_amount,
-          :max_amount => old_ad.max_amount,
-          :visible    => old_ad.visible
+          :countrycode => old_ad.countrycode,
+          :lat         => old_ad.lat,
+          :lon         => old_ad.lon,
+          :max_amount  => old_ad.max_amount,
+          :min_amount  => old_ad.min_amount,
+          :visible     => old_ad.visible
       }.merge(params)
       request(:post, "/api/ad/#{id}/", updated_params).data
     end
