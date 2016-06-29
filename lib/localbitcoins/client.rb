@@ -6,6 +6,7 @@ require 'localbitcoins/client/contacts'
 require 'localbitcoins/client/markets'
 require 'localbitcoins/client/wallet'
 require 'localbitcoins/client/public'
+require 'localbitcoins/client/feedback'
 
 module LocalBitcoins
   class Client
@@ -18,6 +19,7 @@ module LocalBitcoins
     include LocalBitcoins::Wallet
     include LocalBitcoins::Contacts
     include LocalBitcoins::Public
+    include LocalBitcoins::Feedback
 
 
     attr_reader :oauth_client, :access_token, :use_hmac, :client_id, :client_secret
