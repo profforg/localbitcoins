@@ -15,6 +15,10 @@ module LocalBitcoins
       request(:post, "/api/contact_message_post/#{contact_id}/", {:msg=>msg}).data
     end
 
+    def recent_messages
+      request(:get, '/api/recent_messages/').data
+    end
+
     def release_contact(contact_id)
       request(:post, "/api/contact_release/#{contact_id}/").data
     end
