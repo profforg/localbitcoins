@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'rest-client',   '~> 1.6'
   s.add_runtime_dependency 'hashie',        '~> 2.0.2'
   s.add_runtime_dependency 'activesupport', '~> 5'
-  s.add_runtime_dependency 'oauth2',        '~> 0.9.4'
+  s.add_runtime_dependency 'oauth2'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
