@@ -1,8 +1,8 @@
-# LocalBitcoins API Gem 1.1.0
+# LocalBitcoins API Gem 2.0.0
 
 This gem provides a simple, extensible Ruby wrapper to access the [LocalBitcoins API](https://localbitcoins.com/api-docs/).
 
-## Installation & Setup 
+## Installation & Setup
 
 Install the gem:
 ```
@@ -17,17 +17,16 @@ gem 'localbitcoins'
 You can use the gem with or without OAuth2 for authentication. Without authentication the API only allows access to the public endpoints documented [here (Ad Listings)](https://localbitcoins.com/api-docs/public/) and [here (Market Data)](https://localbitcoins.com/api-docs/#toc7)
 
 
-### Setting Up The Client 
+### Setting Up The Client
 
-**TODO: Document HMAC requests.**
+The LocalBitcoins API supports two methods for authenticating API calls: OAuth2, and HMAC. Additionally,  Localbitcoins also supports unauthenticated calls to its "Public Market Data API", and "Public Ad Listing API".
 
+#### OAuth2
 For authenticated requests to the LocalBitcoins API, you must [register your application](https://localbitcoins.com/accounts/api/) and get your API credentials. Use the Client ID and Client Secret to receive an access token via OAuth2. There are a number of ways to implement OAuth2, and it is largely left up to you to decide how to do it. If you've never used OAuth2 before, reading [this tutorial](http://aaronparecki.com/articles/2012/07/29/1/oauth2-simplified) is a good place to start!
 
 Once you have your token, you can get to setting up the LocalBitcoins client.
 
 ``` ruby
-# Authenticated
-
 # long version
 client = LocalBitcoins::Client.new(
   client_id:     'CLIENT_ID',
@@ -40,10 +39,30 @@ client = LocalBitcoins.new(
   client_secret: 'CLIENT_SECRET',
   oauth_token:   'OAUTH_TOKEN'
 )
+```
 
-# Unauthenticated
+#### HMAC
+[HMAC](http://en.wikipedia.org/wiki/Hash-based_message_authentication_code) is used to programatically interact with Localbitcoins for the purpose of your own trading activities. Every request is signed separately.
+
+```ruby
+# long version
+client = LocalBitcoins::Client.new(
+client_id:      'YOUR_KEY',
+client_secret:  'YOUR_SECRET_KEY',
+use_hmac:       true
+)
+# slightly shorter version
+client = LocalBitcoins.new(
+  client_id:      'YOUR_KEY',
+  client_secret:  'YOUR_SECRET_KEY',
+  use_hmac:       true
+)
+```
+
+#### Unauthenticated
+If you only need to make calls to the "Public Market Data API", and "Public Ad Listing API".
+```ruby
 client = LocalBitcoins.new
-
 ```
 
 ### Global Configuration
@@ -53,8 +72,9 @@ To make things easier, you can define your client credentials at a global level:
 ``` ruby
 # Set the configuration
 LocalBitcoins.configure(
-  client_id: 'CLIENT_ID',
-  client_secret: 'CLIENT_SECRET'
+  client_id:      ENV["LOCALBITCOINS_ACCESS_KEY"], # Set via an Environment variable
+  client_secret:  ENV["LOCALBITCOINS_SECRET_KEY"], # Set via an Environment variable
+  use_hmac:       true # Set if using HMAC authenticated requests (defaut is false)
 )
 
 # Get the configuration
@@ -126,13 +146,13 @@ Update existing ad for the token owner.
 # pass a hash of the above fields, plus any other editable fields
 # returns a message on success
 client.update_ad(id,params)
-``` 
+```
 
 List of ads from a comma separated string of ids
 ``` ruby
 # pass a comma separated string of ids
 ads = client.ad_list("12345,123456,1234567")
-``` 
+```
 Gets a single ad from its id
 
 ``` ruby
@@ -164,7 +184,7 @@ List of active contacts
 contacts = client.active_contacts
 # buyers only
 contacts = client.active_contacts('buyer')
-# sellers only 
+# sellers only
 contacts = client.active_contacts('seller')
 ```
 
@@ -173,14 +193,14 @@ Released, canceled, and closed contacts have their own methods as well, which ca
 released = client.released_contacts
 closed = client.closed_contacts
 canceled = client.canceled_contacts
-``` 
+```
 
 Get a contact based on the id
 ``` ruby
 released = client.released_contacts
 closed = client.closed_contacts
 canceled = client.canceled_contacts
-``` 
+```
 
 Get a contact based on the id
 ``` ruby
@@ -295,7 +315,7 @@ Return a batch of 500 trades in the specifed currency
 trades = client.trades(currency)
 
 # since is an optional trade id - will return the next 500 trades after the specifed id
-trades = client.trades(currency, 12345) 
+trades = client.trades(currency, 12345)
 ```
 
 Return the LocalBitcoins online orderbook ( Bids and Asks ) in a specified currency
