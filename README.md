@@ -154,6 +154,12 @@ Gets a single ad from its id
 ``` ruby
 ad = client.ad(12345)
 ```
+
+Deletes a single ad from its id
+
+``` ruby
+ad = client.delete_ad(12345)
+```
 ### Escrows
 
 View token owner's releasable escrows

@@ -59,5 +59,9 @@ module LocalBitcoins
     def ad(ad_id)
       request(:get, "/api/ad-get/#{ad_id}/").data.ad_list[0]
     end
+
+    def delete_ad(ad_id)
+      request(:post, "/api/ad-delete/#{ad_id}/").data
+    end
   end
 end
