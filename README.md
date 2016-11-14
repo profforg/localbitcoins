@@ -42,21 +42,17 @@ client = LocalBitcoins.new(
 ```
 
 #### HMAC
-[HMAC](http://en.wikipedia.org/wiki/Hash-based_message_authentication_code) is used to programatically interact with Localbitcoins for the purpose of your own trading activities. Every request is signed separately.
+[HMAC](http://en.wikipedia.org/wiki/Hash-based_message_authentication_code) is used to programmatically interact with Localbitcoins for the purpose of your own trading activities. Every request is signed separately.
 
 ```ruby
-# long version
-client = LocalBitcoins::Client.new(
-client_id:      'YOUR_KEY',
-client_secret:  'YOUR_SECRET_KEY',
-use_hmac:       true
-)
-# slightly shorter version
 client = LocalBitcoins.new(
   client_id:      'YOUR_KEY',
   client_secret:  'YOUR_SECRET_KEY',
   use_hmac:       true
 )
+
+# or through the Global Configuration (see section below)
+client = LocalBitcoins.new(LocalBitcoins.configuration)
 ```
 
 #### Unauthenticated
