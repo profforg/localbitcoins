@@ -33,7 +33,7 @@ module LocalBitcoins
       raise 'Client ID and secret required!' unless @client_id && @client_secret
 
       digest    = OpenSSL::Digest.new('sha256')
-      nonce     = DateTime.now.strftime('%Q')
+      nonce     = "%10.0f" % (Time.now.to_f * 10**20)
       params    = URI.encode_www_form(body)
       data      = [nonce, @client_id, path, params].join
       signature = OpenSSL::HMAC.hexdigest(digest, @client_secret, data)
