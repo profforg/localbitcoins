@@ -62,6 +62,11 @@ module LocalBitcoins
       Hashie::Mash.new(JSON.parse(currencies_uri.read)).data if currencies_uri.status.first=='200'
     end
 
+    def countrycodes
+      countrycodes_uri = open("#{ROOT}/api/countrycodes/")
+      Hashie::Mash.new(JSON.parse(countrycodes_uri.read)).data if countrycodes_uri.status.first=='200'
+    end
+
     # - Required fields -
     # lat                       - latitude of location [float]
     # lon                       - longitude of location [float]
