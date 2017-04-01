@@ -21,6 +21,12 @@ module LocalBitcoins
       raise Error.new(hash.error) if hash.error
       raise Error.new(hash.errors.join(',')) if hash.errors
       hash
+    rescue RestClient::BadRequest => e
+      response = JSON.parse(e.response.body)
+      errors   = response["error"]["errors"].values.join(", ") rescue nil
+      errors ||= response["error"]["message"]
+      raise Error.new(errors) if errors
+      raise
     end
 
     def hmac_request(http_method, path, body={})
