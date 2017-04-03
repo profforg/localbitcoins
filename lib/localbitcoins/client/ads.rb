@@ -32,7 +32,7 @@ module LocalBitcoins
       bank_name msg sms_verification_required track_max_amount min_amount lon
       visible require_trusted_by_advertiser require_identification max_amount)
 
-      old_ad = ad_or_id.is_a?(Hashie::Mash) ? ad_or_id : ad(id).data
+      old_ad = ad_or_id.is_a?(Integer) ? ad(ad_or_id).data : ad_or_id
       params = Hash[fields.map{|f| [f.to_sym, old_ad[f]]}].merge(params)
       request(:post, "/api/ad/#{old_ad["ad_id"]}/", params).data
     end
