@@ -10,18 +10,15 @@ module LocalBitcoins
     ROOT = 'https://localbitcoins.com'
 
     def ticker
-      ticker_uri = open("#{ROOT}/bitcoinaverage/ticker-all-currencies/")
-      Hashie::Mash.new(JSON.parse(ticker_uri.read)) if ticker_uri.status.first=='200'
+      __execute "#{ROOT}/bitcoinaverage/ticker-all-currencies/"
     end
 
     def trades(currency, last_tid=nil)
-      trade_uri = open("#{ROOT}/bitcoincharts/#{currency}/trades.json?since=#{last_tid}")
-      JSON.parse(trade_uri.read) if trade_uri.status.first=='200'
+      __execute "#{ROOT}/bitcoincharts/#{currency}/trades.json?since=#{last_tid}"
     end
 
     def orderbook(currency)
-      orderbook_uri = open("#{ROOT}/bitcoincharts/#{currency}/orderbook.json")
-      Hashie::Mash.new(JSON.parse(orderbook_uri.read)) if orderbook_uri.status.first=='200'
+      __execute "#{ROOT}/bitcoincharts/#{currency}/orderbook.json"
     end
   end
 end

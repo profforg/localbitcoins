@@ -56,5 +56,14 @@ module LocalBitcoins
         )
       end
     end
+
+    private
+
+    def __execute(url, data: false)
+      response = RestClient.get(url)
+      return unless response.code == 200
+      response = Hashie::Mash.new(JSON.parse(response.body))
+      data ? response.data : response
+    end
   end
 end
