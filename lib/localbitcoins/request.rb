@@ -23,7 +23,6 @@ module LocalBitcoins
       hash
     rescue RestClient::BadRequest => e
       response = JSON.parse(e.response.body)
-      errors   = response["error"]["errors"].values.join(", ") rescue nil
       errors ||= response["error"]["message"]
       raise Error.new(errors) if errors
       raise
@@ -33,7 +32,7 @@ module LocalBitcoins
       raise 'Client ID and secret required!' unless @client_id && @client_secret
 
       digest    = OpenSSL::Digest.new('sha256')
-      nonce     = "%10.0f" % (Time.now.to_f * 10**20)
+      nonce     = "%10.0f" % (Time.now.to_f * 10**9)
       params    = URI.encode_www_form(body)
       data      = [nonce, @client_id, path, params].join
       signature = OpenSSL::HMAC.hexdigest(digest, @client_secret, data)

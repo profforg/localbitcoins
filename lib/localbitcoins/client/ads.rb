@@ -1,8 +1,19 @@
 module LocalBitcoins
   module Ads
     # Get a list of the token owner's ads
-    def ads
-      request(:get, '/api/ads/').data
+    def ads(params = {})
+      request(:get, '/api/ads/', params).data
+    end
+
+    def all_ads
+      list  = ads.ad_list
+      total = list
+      until list.count < 50
+        list = ads(id__gt: list.map{|a|a.data.ad_id}.max).ad_list
+        total += list
+        yield(list) if block_given?
+      end
+      total
     end
 
     # Update one of the token owner's ads
@@ -16,17 +27,14 @@ module LocalBitcoins
     # NOTE 1: Setting min_amount or max_amount to nil will unset them.
     # NOTE 2: "Floating price" must be false in you ad's edit form for price_equation to go through
     #
-    def update_ad(id, params={})
-      old_ad = ad(id).data
-      updated_params = {
-          :countrycode => old_ad.countrycode,
-          :lat         => old_ad.lat,
-          :lon         => old_ad.lon,
-          :max_amount  => old_ad.max_amount,
-          :min_amount  => old_ad.min_amount,
-          :visible     => old_ad.visible
-      }.merge(params)
-      request(:post, "/api/ad/#{id}/", updated_params).data
+    def update_ad(ad_or_id, params={})
+      fields = %w(city location_string countrycode currency account_info lat
+      bank_name msg sms_verification_required track_max_amount min_amount lon
+      visible require_trusted_by_advertiser require_identification max_amount)
+
+      old_ad = ad_or_id.is_a?(Hashie::Mash) ? ad_or_id : ad(id).data
+      params = Hash[fields.map{|f| [f.to_sym, old_ad[f]]}].merge(params)
+      request(:post, "/api/ad/#{old_ad["ad_id"]}/", params).data
     end
 
     # Create a new ad for the token owner
