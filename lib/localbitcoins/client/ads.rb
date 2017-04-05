@@ -27,14 +27,15 @@ module LocalBitcoins
     # NOTE 1: Setting min_amount or max_amount to nil will unset them.
     # NOTE 2: "Floating price" must be false in you ad's edit form for price_equation to go through
     #
-    def update_ad(ad_or_id, params={})
+    def update_ad(id, params={})
+      old_ad = ad(id).data
       fields = %w(city location_string countrycode currency account_info lat
       bank_name msg sms_verification_required track_max_amount min_amount lon
       visible require_trusted_by_advertiser require_identification max_amount)
 
-      old_ad = ad_or_id.is_a?(Integer) ? ad(ad_or_id).data : ad_or_id
+      # old_ad = ad_or_id.is_a?(Integer) ? ad(ad_or_id).data : ad_or_id
       params = Hash[fields.map{|f| [f.to_sym, old_ad[f]]}].merge(params)
-      request(:post, "/api/ad/#{old_ad["ad_id"]}/", params).data
+      request(:post, "/api/ad/#{old_ad["ad_id"]}/", params).data.merge(params)
     end
 
     # Create a new ad for the token owner
