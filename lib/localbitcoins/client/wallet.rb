@@ -24,5 +24,9 @@ module LocalBitcoins
     def wallet_addr
       request(:post, '/api/wallet-addr/').data
     end
+
+    def fees
+      request(:get, '/api/fees/').data
+    end
   end
 end
